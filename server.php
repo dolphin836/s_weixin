@@ -6,6 +6,15 @@ include "wechat.class.php";
 
 use Medoo\Medoo;
 
+$db = new Medoo([
+	'database_type' => 'mysql',
+	'database_name' => 'name',
+			'server' => 'localhost',
+			'username' => 'root',
+			'password' => '18133193e0',
+			'charset' => 'utf8'
+]);
+
 $log = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
 
 $options = array(
@@ -26,15 +35,6 @@ $log->info('消息类型：' . $msgType);
 switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
 	
-		$db = new Medoo([
-			'database_type' => 'mysql',
-			'database_name' => 'name',
-				   'server' => 'localhost',
-				 'username' => 'root',
-				 'password' => '18133193e0',
-				  'charset' => 'utf8'
-		]);
-
 		$OpenID      = $weObj->getRevFrom();
 
 		$log->info('用户标识：' . $OpenID);
