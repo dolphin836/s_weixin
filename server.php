@@ -29,9 +29,10 @@ switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
 		$eventType  = $weObj->getRevEvent();
 
-		$log->debug('事件类型：' . $eventType);
+		$log->debug('事件类型：' . $eventType['event']);
+		$log->debug('事件参数：' . $eventType['key']);
 
-		switch ($eventType) {
+		switch ($eventType['event']) {
 			case Wechat::EVENT_SUBSCRIBE:
 				$log->info('订阅');
 				$returnText = "订阅成功";
