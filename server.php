@@ -1,28 +1,29 @@
 <?php
 
-include __DIR__ . '/vendor/autoload.php'; // 引入 composer 入口文件
+include "wechat.class.php";
 
-use EasyWeChat\Foundation\Application;
+$options = array(
+		'token'=>'5MhSkoNZCxC8GNhmMlwITdNyXuebyxeF',
+        'encodingaeskey'=>'tldoRFpZaPndNYMkEY00nmoGCZsKm5W79N9oJBAns8F',
+		'appid'=>'wx3f57772b43b05ba5',
+		'appsecret'=>'98926008d074d0ead28018fa8c686d32'
+);
 
-$options = [
-    'debug'  => true,
-    'app_id' => 'wx3f57772b43b05ba5',
-    'secret' => '98926008d074d0ead28018fa8c686d32',
-    'token'  => '5MhSkoNZCxC8GNhmMlwITdNyXuebyxeF',
-    // 'aes_key' => 'tldoRFpZaPndNYMkEY00nmoGCZsKm5W79N9oJBAns8F', // 可选
-    'log' => [
-        'level' => 'debug',
-        'file'  => '/alidata/www/s_weixin/log/s_weixin.log', // XXX: 绝对路径！！！！
-    ],
-    //...
-];
+$weObj = new Wechat($options);
 
-$app      = new Application($options);
+$weObj->valid();
 
-$server->setMessageHandler(function ($message) {
-    return "您好！欢迎关注我!";
-});
+$type = $weObj->getRev()->getRevType();
 
-$response = $app->server->serve();
-
-$response->send();
+switch($type) {
+	case Wechat::MSGTYPE_TEXT:
+			$weObj->text("hello, I'm wechat")->reply();
+			exit;
+			break;
+	case Wechat::MSGTYPE_EVENT:
+			break;
+	case Wechat::MSGTYPE_IMAGE:
+			break;
+	default:
+			$weObj->text("help info")->reply();
+}
