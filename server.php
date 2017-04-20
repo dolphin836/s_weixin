@@ -42,7 +42,7 @@ switch($msgType) {
 			$log->info('Ticket：' . $ticket['ticket']);
 			$log->info('Ticket：' . $ticket['expire_seconds']);
 			$log->info('Ticket：' . $ticket['url']);
-			$qrcode    = $weObj->getQRUrl($ticket);
+			$qrcode    = $weObj->getQRUrl($ticket['ticket']);
 			$log->info('推荐人二维码地址：' . $qrcode);
 		}
 		break;
