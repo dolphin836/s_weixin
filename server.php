@@ -23,6 +23,15 @@ $OpenID      = $weObj->getRevFrom();
 
 $log->info('用户标识：' . $OpenID);
 
+$userinfo    = $weObj->getUserInfo($OpenID);
+
+$log->info('昵称：' . $userinfo['nickname']);
+$log->info('性别：' . $userinfo['sex']);
+$log->info('城市：' . $userinfo['city']);
+$log->info('国家：' . $userinfo['country']);
+$log->info('省份：' . $userinfo['province']);
+$log->info('头像：' . $userinfo['headimgurl']);
+
 $log->info('消息类型：' . $msgType);
 
 switch($msgType) {
