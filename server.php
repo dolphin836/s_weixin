@@ -8,11 +8,11 @@ use Medoo\Medoo;
 
 $db = new Medoo([
 	'database_type' => 'mysql',
-	'database_name' => 'name',
-			'server' => 'localhost',
-			'username' => 'root',
-			'password' => '18133193e0',
-			'charset' => 'utf8'
+	'database_name' => 'tan',
+		   'server' => 'localhost',
+		 'username' => 'root',
+		 'password' => '18133193e0',
+	      'charset' => 'utf8'
 ]);
 
 $log = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
