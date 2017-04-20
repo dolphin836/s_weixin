@@ -57,16 +57,16 @@ switch($msgType) {
 			case Wechat::EVENT_SUBSCRIBE:
 				$log->info('订阅');
 				$returnText = "订阅成功";
-				$user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
-				if (empty($user)) {
-					$database->insert("user", [
-						"uuid" => $OpenID,
-						"nickname" => $userinfo['nickname'],
-						"openid" => $OpenID,
-						"image" => $userinfo['headimgurl'],
-						"register_time" => time()
-					]);
-				}
+				// $user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
+				// if (empty($user)) {
+				// 	$database->insert("user", [
+				// 		"uuid" => $OpenID,
+				// 		"nickname" => $userinfo['nickname'],
+				// 		"openid" => $OpenID,
+				// 		"image" => $userinfo['headimgurl'],
+				// 		"register_time" => time()
+				// 	]);
+				// }
 				break;
 			case Wechat::EVENT_UNSUBSCRIBE:
 				$log->info('取消订阅');
