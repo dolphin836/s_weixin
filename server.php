@@ -21,6 +21,9 @@ switch($type) {
 			exit;
 			break;
 	case Wechat::MSGTYPE_EVENT:
+			$OpenID = $weObj->getRevFrom();
+			$weObj->text($OpenID)->reply();
+			exit;
 			break;
 	case Wechat::MSGTYPE_IMAGE:
 			break;
