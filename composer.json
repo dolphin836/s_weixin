@@ -1,0 +1,6 @@
+{
+    "name": "administrator/weixin",
+    "require": {
+        "overtrue/wechat": "~3.1"
+    }
+}
