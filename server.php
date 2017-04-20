@@ -37,8 +37,8 @@ switch($msgType) {
 		$content     = $weObj->getRevContent();
 		$returnText  = $content;
 		if ($content == '#') {
-			$scene_str = 'Tan_' . time(); 
-			$ticket    = $weObj->getQRCode($scene_str, 1);
+			//$scene_str = 'Tan_' . time(); 
+			$ticket    = $weObj->getQRCode(1);
 			$log->info('Ticket：' . $ticket['ticket']);
 			$log->info('Ticket：' . $ticket['expire_seconds']);
 			$log->info('Ticket：' . $ticket['url']);
