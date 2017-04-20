@@ -29,7 +29,7 @@ switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
 		$eventType  = $weObj->getRevEvent();
 
-		$log->info('事件类型：' . $eventType);
+		$log->debug('事件类型：' . $eventType);
 
 		switch ($eventType) {
 			case Wechat::EVENT_SUBSCRIBE:
