@@ -34,7 +34,14 @@ $log->info('消息类型：' . $msgType);
 
 switch($msgType) {
 	case Wechat::MSGTYPE_TEXT:
-		$returnText = $weObj->getRevContent();
+		$content     = $weObj->getRevContent();
+		$returnText  = $content;
+		if ($content == '#') {
+			$scene_str = 'Tan_' . time(); 
+			$ticket    = $weObj->getQRCode($scene_str, 1);
+			$qrcode    = $weObj->getQRUrl($ticket);
+			$log->info('推荐人二维码地址：' . $qrcode);
+		}
 		break;
 	case Wechat::MSGTYPE_EVENT:
 	
