@@ -4,6 +4,8 @@ require 'vendor/autoload.php';
 
 include "wechat.class.php";
 
+use Medoo\Medoo;
+
 $log = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
 
 $options = array(
@@ -19,23 +21,33 @@ $weObj = new Wechat($options);
 
 $msgType     = $weObj->getRev()->getRevType();
 
-$OpenID      = $weObj->getRevFrom();
-
-$log->info('用户标识：' . $OpenID);
-
-$userinfo    = $weObj->getUserInfo($OpenID);
-
-$log->info('昵称：' . $userinfo['nickname']);
-$log->info('性别：' . $userinfo['sex']);
-$log->info('城市：' . $userinfo['city']);
-$log->info('国家：' . $userinfo['country']);
-$log->info('省份：' . $userinfo['province']);
-$log->info('头像：' . $userinfo['headimgurl']);
-
 $log->info('消息类型：' . $msgType);
 
 switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
+	
+		$db = new Medoo([
+			'database_type' => 'mysql',
+			'database_name' => 'name',
+				   'server' => 'localhost',
+				 'username' => 'root',
+				 'password' => '18133193e0',
+				  'charset' => 'utf8'
+		]);
+
+		$OpenID      = $weObj->getRevFrom();
+
+		$log->info('用户标识：' . $OpenID);
+
+		$userinfo    = $weObj->getUserInfo($OpenID);
+
+		$log->info('昵称：' . $userinfo['nickname']);
+		$log->info('性别：' . $userinfo['sex']);
+		$log->info('城市：' . $userinfo['city']);
+		$log->info('国家：' . $userinfo['country']);
+		$log->info('省份：' . $userinfo['province']);
+		$log->info('头像：' . $userinfo['headimgurl']);
+
 		$eventType  = $weObj->getRevEvent();
 
 		$log->debug('事件类型：' . $eventType['event']);
@@ -45,6 +57,16 @@ switch($msgType) {
 			case Wechat::EVENT_SUBSCRIBE:
 				$log->info('订阅');
 				$returnText = "订阅成功";
+				$user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
+				if (empty($user)) {
+					$database->insert("user", [
+						"uuid" => $OpenID,
+						"nickname" => $userinfo['nickname'],
+						"openid" => $OpenID,
+						"image" => $userinfo['headimgurl'],
+						"register_time" => time()
+					]);
+				}
 				break;
 			case Wechat::EVENT_UNSUBSCRIBE:
 				$log->info('取消订阅');

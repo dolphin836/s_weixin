@@ -11,6 +11,10 @@ class ComposerStaticInitd38a7e2d135cb9387e28bdfab6b9a5aa
         array (
             'Psr\\Log\\' => 8,
         ),
+        'M' => 
+        array (
+            'Medoo\\' => 6,
+        ),
         'K' => 
         array (
             'Katzgrau\\KLogger\\' => 17,
@@ -21,6 +25,10 @@ class ComposerStaticInitd38a7e2d135cb9387e28bdfab6b9a5aa
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Medoo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/catfan/medoo/src',
         ),
         'Katzgrau\\KLogger\\' => 
         array (
