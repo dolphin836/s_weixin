@@ -33,6 +33,9 @@ $msgType     = $weObj->getRev()->getRevType();
 $log->info('消息类型：' . $msgType);
 
 switch($msgType) {
+	case Wechat::MSGTYPE_TEXT:
+		$returnText = $weObj->getRevContent();
+		break;
 	case Wechat::MSGTYPE_EVENT:
 	
 		$OpenID      = $weObj->getRevFrom();
