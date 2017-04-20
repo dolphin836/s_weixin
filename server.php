@@ -25,7 +25,7 @@ switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
 		$returnText .= "（事件消息）";
 		$eventType  = $weObj->getRevEvent();
-		$returnText = '事件类型：' . $eventType;
+		$returnText .= '事件类型：' . $eventType;
 
 		switch ($eventType) {
 			case Wechat::EVENT_SUBSCRIBE:
