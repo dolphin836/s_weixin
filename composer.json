@@ -1,6 +1,6 @@
 {
-    "name": "administrator/weixin",
+    "name": "dolphin/weixin",
     "require": {
-        "overtrue/wechat": "~3.1"
+        "katzgrau/klogger": "dev-master"
     }
 }

@@ -1,6 +1,10 @@
 <?php
 
+require 'vendor/autoload.php';
+
 include "wechat.class.php";
+
+$log = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
 
 $options = array(
 		'token'=>'5MhSkoNZCxC8GNhmMlwITdNyXuebyxeF',
@@ -17,32 +21,36 @@ $msgType     = $weObj->getRev()->getRevType();
 
 $OpenID      = $weObj->getRevFrom();
 
-$returnText  = '用户标识：' . $OpenID;
+$log->info('用户标识：' . $OpenID);
 
-$returnText .= ' - 消息类型：' . $msgType;
+$log->info('消息类型：' . $msgType);
 
 switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
-		$returnText .= "（事件消息）";
 		$eventType  = $weObj->getRevEvent();
-		$returnText .= '事件类型：' . $eventType;
+
+		$log->info('事件类型：' . $eventType);
 
 		switch ($eventType) {
 			case Wechat::EVENT_SUBSCRIBE:
-				$returnText .= "（订阅）";
+				$log->info('订阅');
+				$returnText = "订阅成功";
 				break;
 			case Wechat::EVENT_UNSUBSCRIBE:
-				$returnText .= "（取消订阅）";
+				$log->info('取消订阅');
+				$returnText = "取消订阅";
 				break;
 			case Wechat::EVENT_SCAN:
-				$returnText .= "（带参二维码）";
+				$log->info('带参二维码');
+				$returnText = "扫码成功";
 				break;
 			default:
+				$returnText = "通用回复文本";
 				break;
 		}
 		break;
 	default:
-		$returnText .= "通用回复文本";
+		$returnText = "通用回复文本";
 }
 
 $weObj->text($returnText);
