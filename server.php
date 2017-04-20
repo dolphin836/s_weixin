@@ -81,6 +81,7 @@ switch($msgType) {
 				break;
 			case Wechat::EVENT_SCAN:
 				$log->info('带参二维码');
+				$log->info($eventType['key']);
 				$returnText = "扫码成功";
 				break;
 			default:
