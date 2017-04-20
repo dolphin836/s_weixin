@@ -18,6 +18,11 @@ $options = [
 ];
 
 $app      = new Application($options);
+
+$server->setMessageHandler(function ($message) {
+    return "您好！欢迎关注我!";
+});
+
 $response = $app->server->serve();
 
 $response->send();
