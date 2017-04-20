@@ -39,6 +39,9 @@ switch($msgType) {
 		if ($content == '#') {
 			$scene_str = 'Tan_' . time(); 
 			$ticket    = $weObj->getQRCode($scene_str, 1);
+			$log->info('Ticket：' . $ticket['ticket']);
+			$log->info('Ticket：' . $ticket['expire_seconds']);
+			$log->info('Ticket：' . $ticket['url']);
 			$qrcode    = $weObj->getQRUrl($ticket);
 			$log->info('推荐人二维码地址：' . $qrcode);
 		}
