@@ -11,22 +11,40 @@ $options = array(
 
 $weObj = new Wechat($options);
 
-$weObj->valid();
+// $weObj->valid();
 
-$type = $weObj->getRev()->getRevType();
+$msgType     = $weObj->getRevType();
 
-switch($type) {
-	case Wechat::MSGTYPE_TEXT:
-			$weObj->text("hello, I'm wechat")->reply();
-			exit;
-			break;
+$OpenID      = $weObj->getRevFrom();
+
+$returnText  = '用户标识：' . $OpenID;
+
+$returnText .= ' - 消息类型：' . $msgType;
+
+switch($msgType) {
 	case Wechat::MSGTYPE_EVENT:
-			$OpenID = $weObj->getRevFrom();
-			$weObj->text($OpenID)->reply();
-			exit;
-			break;
-	case Wechat::MSGTYPE_IMAGE:
-			break;
+		$returnText .= "（事件消息）";
+		$eventType  = $weObj->getRevEvent();
+		$returnText = '事件类型：' . $eventType;
+
+		switch ($eventType) {
+			case Wechat::EVENT_SUBSCRIBE:
+				$returnText .= "（订阅）";
+				break;
+			case Wechat::EVENT_UNSUBSCRIBE:
+				$returnText .= "（取消订阅）";
+				break;
+			case Wechat::EVENT_SCAN:
+				$returnText .= "（带参二维码）";
+				break;
+			default:
+				break;
+		}
+		break;
 	default:
-			$weObj->text("help info")->reply();
+		$returnText .= "通用回复文本";
 }
+
+$weObj->text($returnText);
+
+$weObj->reply();
