@@ -13,7 +13,7 @@ $weObj = new Wechat($options);
 
 // $weObj->valid();
 
-$msgType     = $weObj->getRevType();
+$msgType     = $weObj->getRev()->getRevType();
 
 $OpenID      = $weObj->getRevFrom();
 
