@@ -39,15 +39,6 @@ switch($msgType) {
 
 		$log->info('用户标识：' . $OpenID);
 
-		$userinfo    = $weObj->getUserInfo($OpenID);
-
-		$log->info('昵称：' . $userinfo['nickname']);
-		$log->info('性别：' . $userinfo['sex']);
-		$log->info('城市：' . $userinfo['city']);
-		$log->info('国家：' . $userinfo['country']);
-		$log->info('省份：' . $userinfo['province']);
-		$log->info('头像：' . $userinfo['headimgurl']);
-
 		$eventType  = $weObj->getRevEvent();
 
 		$log->debug('事件类型：' . $eventType['event']);
@@ -56,8 +47,12 @@ switch($msgType) {
 		switch ($eventType['event']) {
 			case Wechat::EVENT_SUBSCRIBE:
 				$log->info('订阅');
-				$returnText = "订阅成功";
-				// $user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
+				$returnText  = "订阅成功";
+				$userinfo    = $weObj->getUserInfo($OpenID);
+				$log->info('昵称：' . $userinfo['nickname']);
+
+				$user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
+				$log->debug('数据库查询结果 ', $user);
 				// if (empty($user)) {
 				// 	$database->insert("user", [
 				// 		"uuid" => $OpenID,
