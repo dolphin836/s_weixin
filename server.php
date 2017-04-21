@@ -22,12 +22,6 @@ $log->info($OpenID);
 
 $db         = new Db($OpenID);
 
-$log->info($db);
-
-
-
-$log->info($msgType);
-
 switch($msgType) {
 	case Wechat::MSGTYPE_TEXT: //文本消息
 		$content     = $weObj->getRevContent();
