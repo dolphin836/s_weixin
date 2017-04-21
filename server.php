@@ -60,9 +60,14 @@ $msgType     = $weObj->getRev()->getRevType();
 
 $log->info('消息类型：' . $msgType);
 
+$OpenID      = $weObj->getRevFrom();
+
+$log->info('用户标识：' . $OpenID);
+
 switch($msgType) {
 	case Wechat::MSGTYPE_TEXT:
 		$content     = $weObj->getRevContent();
+		$log->info('Content：' . $content);
 		$returnText  = $content;
 		if ($content == '#') {
 			// $scene_str  = GeraHash(64);
@@ -76,15 +81,12 @@ switch($msgType) {
 
 			//更新手机号
 			$phone = substr($content, 1 , 11);
+			$log->info('Phone：' . $phone);
 			$db->update('user', ['telephone' => $phone], ['openid[=]' => $OpenID]);
 		}
 		break;
 	case Wechat::MSGTYPE_EVENT:
 	
-		$OpenID      = $weObj->getRevFrom();
-
-		$log->info('用户标识：' . $OpenID);
-
 		$eventType  = $weObj->getRevEvent();
 
 		$log->debug('事件类型：' . $eventType['event']);
