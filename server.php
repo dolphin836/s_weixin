@@ -57,18 +57,23 @@ switch($msgType) {
 		switch ($eventType['event']) {
 			case Wechat::EVENT_SUBSCRIBE: //订阅
 				$key        = $eventType['key'];
-				$log->info("扫推荐人二维码关注的 " . $key);
 				if ( ! $db->is_have() ) { //如果系统中不存在则新增用户
 					$userinfo    = $weObj->getUserInfo($OpenID);
-					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl']);
-					$returnText  = $user_id;
+					$rfcode   = '';
+					if ($key != '') { //推荐人
+						$rfcode  = substr($key, 0 , 8);; 
+					}
+					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl'], $rfcode);
+					if ($user_id && $rfcode != '') {
+						$returnText  .= "你是由 " . $rfcode . "推荐的";
+					}
 				} else {
-					$log->info('此用户系统中已经存在');
+					$returnText = "欢迎回来。";
 				}
 				break;
 			case Wechat::EVENT_SCAN: //扫描带参二维码
 				$key        = $eventType['key'];
-				$returnText = "（已经关注的用户）扫推荐人二维码" . $key;
+				$returnText = "欢迎回来，推荐功能只对新用户有效哦。";
 				break;
 			default:
 				break;

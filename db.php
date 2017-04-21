@@ -51,14 +51,15 @@ class Db extends Medoo
         return true;
     }
 
-    public function add($nickname, $image)
+    public function add($nickname, $image, $rfcode)
     {
         $user_id = $this->insert("user", [
                      "uuid" => $this->open_id,
                  "nickname" => $nickname,
                    "openid" => $this->open_id,
                     "image" => $image,
-                     "type" => 1, 
+                     "type" => 1,
+             "referee_uuid" => $rfcode,
             "register_time" => time(),
                "login_time" => time()
         ]);
