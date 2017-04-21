@@ -17,7 +17,7 @@ function microtime_float()
 
 function GeraHash($qtd)
 { 
-    $Caracteres = '0123456789'; 
+    $Caracteres = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuioplkjhgfdsazxcvbnm0123456789'; 
     $QuantidadeCaracteres = strlen($Caracteres); 
     $QuantidadeCaracteres--; 
 
@@ -65,9 +65,9 @@ switch($msgType) {
 		$content     = $weObj->getRevContent();
 		$returnText  = $content;
 		if ($content == '#') {
-			$scene_id  = microtime_float();
-			$log->info('Scene：' . $scene_id);
-			$ticket    = $weObj->getQRCode(intval($scene_id));
+			$scene_str  = GeraHash(64);
+			$log->info('Scene：' . $scene_str);
+			$ticket    = $weObj->getQRCode($scene_str, 1);
 			$log->info('Ticket：' . $ticket['ticket']);
 			$log->info('Ticket：' . $ticket['expire_seconds']);
 			$log->info('Ticket：' . $ticket['url']);
