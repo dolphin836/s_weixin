@@ -67,7 +67,7 @@ switch($msgType) {
 		if ($content == '#') {
 			$scene_str  = GeraHash(64);
 			$log->info('Scene：' . $scene_str);
-			$ticket    = $weObj->getQRCode($scene_str, 1);
+			$ticket    = $weObj->getQRCode($scene_str, 2);
 			$log->info('Ticket：' . $ticket['ticket']);
 			$log->info('Ticket：' . $ticket['expire_seconds']);
 			$log->info('Ticket：' . $ticket['url']);
