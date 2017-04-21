@@ -4,129 +4,69 @@ require 'vendor/autoload.php';
 
 include "wechat.class.php";
 
-function microtime_float()
-{
-    list($usec, $sec)  = explode(" ", microtime());
+include "config.php";
 
-    list($str1, $str2) = explode(".", $usec);
+include "db.php";
 
-    $string = $sec . $str2;
+$log        = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
 
-    return $string;
-}
+$weObj      = new Wechat($config['weixin']);
 
-function GeraHash($qtd)
-{ 
-    $Caracteres = 'QWERTYUIOPASDFGHJKLZXCVBNMqwertyuioplkjhgfdsazxcvbnm0123456789'; 
-    $QuantidadeCaracteres = strlen($Caracteres); 
-    $QuantidadeCaracteres--; 
+$returnText = $config['default_reply_msg'];
 
-    $Hash=NULL; 
+$msgType    = $weObj->getRev()->getRevType();
 
-    for($x = 1; $x <= $qtd; $x++)
-    { 
-        $Posicao = rand(0, $QuantidadeCaracteres); 
-        $Hash   .= substr($Caracteres, $Posicao, 1); 
-    } 
+$OpenID     = $weObj->getRevFrom();
 
-    return $Hash; 
-}
-
-use Medoo\Medoo;
-
-$db = new Medoo([
-	'database_type' => 'mysql',
-	'database_name' => 'tan',
-		   'server' => 'localhost',
-		 'username' => 'root',
-		 'password' => '18133193e0',
-	      'charset' => 'utf8'
-]);
-
-$log = new Katzgrau\KLogger\Logger(__DIR__ . '/log');
-
-$options = array(
-		'token'=>'5MhSkoNZCxC8GNhmMlwITdNyXuebyxeF',
-        'encodingaeskey'=>'tldoRFpZaPndNYMkEY00nmoGCZsKm5W79N9oJBAns8F',
-		'appid'=>'wx3f57772b43b05ba5',
-		'appsecret'=>'98926008d074d0ead28018fa8c686d32'
-);
-
-$weObj = new Wechat($options);
-
-// $weObj->valid();
-
-$msgType     = $weObj->getRev()->getRevType();
-
-$log->info('消息类型：' . $msgType);
-
-$OpenID      = $weObj->getRevFrom();
-
-$log->info('用户标识：' . $OpenID);
+$db         = new Db($OpenID);
 
 switch($msgType) {
-	case Wechat::MSGTYPE_TEXT:
+	case Wechat::MSGTYPE_TEXT: //文本消息
 		$content     = $weObj->getRevContent();
-		$log->info('Content：' . $content);
 		$command     = substr($content, 0 , 1);
-		$returnText  = $content;
-		if ($command == '#') {
-			// $scene_str  = GeraHash(64);
-			// $log->info('Scene：' . $scene_str);
-			// $ticket    = $weObj->getQRCode($scene_str, 2);
-			// $log->info('Ticket：' . $ticket['ticket']);
-			// $log->info('Ticket：' . $ticket['expire_seconds']);
-			// $log->info('Ticket：' . $ticket['url']);
-			// $qrcode    = $weObj->getQRUrl($ticket['ticket']);
-			// $log->info('推荐人二维码地址：' . $qrcode);
+		if ($command == '#') { //更新手机
+			$phone   = substr($content, 1 , 11);
 
-			//更新手机号
-			$phone = substr($content, 1 , 11);
-			$log->info('Phone：' . $phone);
-			$db->update('user', ['telephone' => $phone], ['openid[=]' => $OpenID]);
+			if ( ! ctype_digit($phone) ) {
+				$log->info('无法识别的手机号码');
+				$returnText = '无法识别的手机号码';
+			}
+
+			if ( $db->is_have_phone($phone) ) {
+				$log->info('手机号码已经存在');
+				$returnText = '手机号码已经存在';
+			}
+
+			if ($db->phone($phone)) {
+				$returnText = '更新手机成功';
+			} else {
+				$returnText = '更新手机识别';
+			}
+		}
+		if ($command == '*') { //获取推荐二维码
+			$ticket     = $weObj->getQRCode($scene_str, 2);
+			$qrcode     = $weObj->getQRUrl($ticket['ticket']);
+			$returnText = $qrcode;
 		}
 		break;
-	case Wechat::MSGTYPE_EVENT:
-	
+	case Wechat::MSGTYPE_EVENT: //事件消息
 		$eventType  = $weObj->getRevEvent();
-
-		$log->debug('事件类型：' . $eventType['event']);
-		$log->debug('事件参数：' . $eventType['key']);
-
 		switch ($eventType['event']) {
-			case Wechat::EVENT_SUBSCRIBE:
-				$log->info('订阅');
-				$returnText  = "订阅成功";
-				$userinfo    = $weObj->getUserInfo($OpenID);
-				$log->info('昵称：' . $userinfo['nickname']);
-
-				$user       = $db->select('user', ['id'], ['openid[=]' => $OpenID]);
-				if (empty($user)) {
-					$db->insert("user", [
-						"uuid" => $OpenID,
-						"nickname" => $userinfo['nickname'],
-						"openid" => $OpenID,
-						"image" => $userinfo['headimgurl'],
-						"register_time" => time()
-					]);
+			case Wechat::EVENT_SUBSCRIBE: //订阅
+				if ( ! $db->is_have() ) { //如果系统中不存在则新增用户
+					$userinfo    = $weObj->getUserInfo($OpenID);
+					$db->add($userinfo['nickname'], $userinfo['headimgurl']);
 				}
 				break;
-			case Wechat::EVENT_UNSUBSCRIBE:
-				$log->info('取消订阅');
-				$returnText = "取消订阅";
-				break;
-			case Wechat::EVENT_SCAN:
-				$log->info('带参二维码');
-				$log->info($eventType['key']);
-				$returnText = "扫码成功";
+			case Wechat::EVENT_SCAN: //扫描带参二维码
+				$key        = $eventType['key'];
+				$returnText = $key;
 				break;
 			default:
-				$returnText = "通用回复文本";
 				break;
 		}
 		break;
 	default:
-		$returnText = "通用回复文本";
 }
 
 $weObj->text($returnText);
