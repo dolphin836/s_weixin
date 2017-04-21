@@ -4,6 +4,34 @@ require 'vendor/autoload.php';
 
 include "wechat.class.php";
 
+function microtime_float()
+{
+    list($usec, $sec)  = explode(" ", microtime());
+
+    list($str1, $str2) = explode(".", $usec);
+
+    $string = $sec . $str2;
+
+    return $string;
+}
+
+function GeraHash($qtd)
+{ 
+    $Caracteres = '0123456789'; 
+    $QuantidadeCaracteres = strlen($Caracteres); 
+    $QuantidadeCaracteres--; 
+
+    $Hash=NULL; 
+
+    for($x = 1; $x <= $qtd; $x++)
+    { 
+        $Posicao = rand(0, $QuantidadeCaracteres); 
+        $Hash   .= substr($Caracteres, $Posicao, 1); 
+    } 
+
+    return $Hash; 
+}
+
 use Medoo\Medoo;
 
 $db = new Medoo([
@@ -37,8 +65,9 @@ switch($msgType) {
 		$content     = $weObj->getRevContent();
 		$returnText  = $content;
 		if ($content == '#') {
-			//$scene_str = 'Tan_' . time(); 
-			$ticket    = $weObj->getQRCode(1);
+			$scene_id  = microtime_float() . GeraHash(14);
+			$log->info('Scene：' . $scene_id);
+			$ticket    = $weObj->getQRCode($scene_id);
 			$log->info('Ticket：' . $ticket['ticket']);
 			$log->info('Ticket：' . $ticket['expire_seconds']);
 			$log->info('Ticket：' . $ticket['url']);
