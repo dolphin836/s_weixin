@@ -25,12 +25,10 @@ $db         = new Db($OpenID);
 switch($msgType) {
 	case Wechat::MSGTYPE_TEXT: //文本消息
 		$content     = $weObj->getRevContent();
-		$log->info($content);
 		$command     = substr($content, 0 , 1);
-		$log->info($command);
+
 		if ($command == '#') { //更新手机
 			$phone   = substr($content, 1 , 11);
-			$log->info($phone);
 			if ( ! ctype_digit($phone) ) {
 				$log->info('无法识别的手机号码');
 				$returnText = '无法识别的手机号码';
@@ -47,31 +45,30 @@ switch($msgType) {
 				$returnText = '更新手机失败';
 			}
 		}
+
 		if ($command == '*') { //获取推荐二维码
 			$ticket     = $weObj->getQRCode($OpenID, 2);
-			$log->info($ticket);
 			$qrcode     = $weObj->getQRUrl($ticket['ticket']);
-			$log->info($qrcode);
 			$returnText = $qrcode;
 		}
 		break;
 	case Wechat::MSGTYPE_EVENT: //事件消息
 		$eventType  = $weObj->getRevEvent();
-		$log->info($eventType['event']);
 		switch ($eventType['event']) {
 			case Wechat::EVENT_SUBSCRIBE: //订阅
+				$key        = $eventType['key'];
+				$log->info("扫推荐人二维码关注的 " . $key);
 				if ( ! $db->is_have() ) { //如果系统中不存在则新增用户
 					$userinfo    = $weObj->getUserInfo($OpenID);
-					$log->info($userinfo['nickname']);
 					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl']);
-					$log->info($user_id);
-					$returnText = $user_id;
+					$returnText  = $user_id;
+				} else {
+					$log->info('此用户系统中已经存在');
 				}
 				break;
 			case Wechat::EVENT_SCAN: //扫描带参二维码
 				$key        = $eventType['key'];
-				$log->info($key);
-				$returnText = $key;
+				$returnText = "（已经关注的用户）扫推荐人二维码" . $key;
 				break;
 			default:
 				break;

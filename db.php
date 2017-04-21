@@ -58,6 +58,7 @@ class Db extends Medoo
                  "nickname" => $nickname,
                    "openid" => $this->open_id,
                     "image" => $image,
+                     "type" => 1, 
             "register_time" => time(),
                "login_time" => time()
         ]);
