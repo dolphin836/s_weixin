@@ -59,13 +59,15 @@ switch($msgType) {
 		break;
 	case Wechat::MSGTYPE_EVENT: //事件消息
 		$eventType  = $weObj->getRevEvent();
-		$log->info($eventType);
+		$log->info($eventType['event']);
 		switch ($eventType['event']) {
 			case Wechat::EVENT_SUBSCRIBE: //订阅
 				if ( ! $db->is_have() ) { //如果系统中不存在则新增用户
 					$userinfo    = $weObj->getUserInfo($OpenID);
 					$log->info($userinfo['nickname']);
-					$db->add($userinfo['nickname'], $userinfo['headimgurl']);
+					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl']);
+					$log->info($user_id);
+					$returnText = $user_id;
 				}
 				break;
 			case Wechat::EVENT_SCAN: //扫描带参二维码
