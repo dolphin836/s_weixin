@@ -65,7 +65,7 @@ switch($msgType) {
 		$content     = $weObj->getRevContent();
 		$returnText  = $content;
 		if ($content == '#') {
-			$scene_id  = microtime_float() . GeraHash(14);
+			$scene_id  = GeraHash(8);
 			$log->info('Scene：' . $scene_id);
 			$ticket    = $weObj->getQRCode((int)$scene_id);
 			$log->info('Ticket：' . $ticket['ticket']);
