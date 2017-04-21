@@ -65,14 +65,18 @@ switch($msgType) {
 		$content     = $weObj->getRevContent();
 		$returnText  = $content;
 		if ($content == '#') {
-			$scene_str  = GeraHash(64);
-			$log->info('Scene：' . $scene_str);
-			$ticket    = $weObj->getQRCode($scene_str, 2);
-			$log->info('Ticket：' . $ticket['ticket']);
-			$log->info('Ticket：' . $ticket['expire_seconds']);
-			$log->info('Ticket：' . $ticket['url']);
-			$qrcode    = $weObj->getQRUrl($ticket['ticket']);
-			$log->info('推荐人二维码地址：' . $qrcode);
+			// $scene_str  = GeraHash(64);
+			// $log->info('Scene：' . $scene_str);
+			// $ticket    = $weObj->getQRCode($scene_str, 2);
+			// $log->info('Ticket：' . $ticket['ticket']);
+			// $log->info('Ticket：' . $ticket['expire_seconds']);
+			// $log->info('Ticket：' . $ticket['url']);
+			// $qrcode    = $weObj->getQRUrl($ticket['ticket']);
+			// $log->info('推荐人二维码地址：' . $qrcode);
+
+			//更新手机号
+			$phone = substr($content, 1 , 11);
+			$db->update('user', ['telephone' => $phone], ['openid[=]' => $OpenID]);
 		}
 		break;
 	case Wechat::MSGTYPE_EVENT:
