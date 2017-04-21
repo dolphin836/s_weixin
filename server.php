@@ -22,6 +22,10 @@ $log->info($OpenID);
 
 $db         = new Db($OpenID);
 
+$log->info($db);
+
+
+
 $log->info($msgType);
 
 switch($msgType) {

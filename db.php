@@ -31,7 +31,7 @@ class Db extends Medoo
 
     public function is_have()
     {
-        $user = $this->select('user', ['id'], ['openid[=]' => $this->open_id, 'deleted[=]' => 0]);
+        $user = $this->select('user', ['id'], ['openid[=]' => $this->open_id]);
 
         if (empty($user)) {
             return false;
@@ -42,7 +42,7 @@ class Db extends Medoo
 
     public function is_have_phone($phone)
     {
-        $user = $this->select('user', ['id'], ['telephone[=]' => $phone, 'deleted[=]' => 0]);
+        $user = $this->select('user', ['id'], ['telephone[=]' => $phone]);
 
         if (empty($user)) {
             return false;
