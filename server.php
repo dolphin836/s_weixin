@@ -68,8 +68,9 @@ switch($msgType) {
 	case Wechat::MSGTYPE_TEXT:
 		$content     = $weObj->getRevContent();
 		$log->info('Content：' . $content);
+		$command     = substr($content, 0 , 1);
 		$returnText  = $content;
-		if ($content == '#') {
+		if ($command == '#') {
 			// $scene_str  = GeraHash(64);
 			// $log->info('Scene：' . $scene_str);
 			// $ticket    = $weObj->getQRCode($scene_str, 2);
