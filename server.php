@@ -61,19 +61,19 @@ switch($msgType) {
 					$userinfo    = $weObj->getUserInfo($OpenID);
 					$rfcode   = '';
 					if ($key != '') { //推荐人
-						$rfcode  = substr($key, 8);; 
+						$rfcode  = substr($key, 8);
 					}
 					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl'], $rfcode);
 					if ($user_id && $rfcode != '') {
-						$returnText  .= "你是由 " . $rfcode . "推荐的";
+						$returnText  .= "你是由 " . $rfcode . " 推荐的";
 					}
 				} else {
-					$returnText = "欢迎回来。";
+					$returnText .= "欢迎您重新回来。";
 				}
 				break;
 			case Wechat::EVENT_SCAN: //扫描带参二维码
 				$key        = $eventType['key'];
-				$returnText = "欢迎回来，推荐功能只对新用户有效哦。";
+				$returnText .= "欢迎回来，推荐功能只对新用户有效哦。";
 				break;
 			default:
 				break;

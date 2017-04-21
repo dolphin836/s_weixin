@@ -53,10 +53,19 @@ class Db extends Medoo
 
     public function add($nickname, $image, $rfcode)
     {
+        if ($rfcode == $this->open_id) {
+            $rfcode = '';
+        }
+
+        $password    = "12345678";
+        $en_password = password_hash($password, PASSWORD_DEFAULT);
+
         $user_id = $this->insert("user", [
                      "uuid" => $this->open_id,
                  "nickname" => $nickname,
                    "openid" => $this->open_id,
+              'en_password' => $en_password,
+                 'password' => $password,
                     "image" => $image,
                      "type" => 1,
              "referee_uuid" => $rfcode,
