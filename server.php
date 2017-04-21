@@ -61,7 +61,7 @@ switch($msgType) {
 					$userinfo    = $weObj->getUserInfo($OpenID);
 					$rfcode   = '';
 					if ($key != '') { //推荐人
-						$rfcode  = substr($key, 0 , 8);; 
+						$rfcode  = substr($key, 8);; 
 					}
 					$user_id     = $db->add($userinfo['nickname'], $userinfo['headimgurl'], $rfcode);
 					if ($user_id && $rfcode != '') {
